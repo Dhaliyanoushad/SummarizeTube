@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "user",
-            content: `Summarize the following YouTube transcript into 5 bullet points:\n\n${transcript}`,
+            content: `Summarize the following YouTube transcript into exactly 5 bullet points. Use a numbered list format with Arabic numerals like '1.', '2.', etc. Do not use dashes or bullets. Keep each point concise and meaningful:\n\n${transcript}`,
           },
         ],
       }),
