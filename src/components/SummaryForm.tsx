@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Key, useState } from "react";
 import axios from "axios";
 
 export default function SummaryForm() {
@@ -10,19 +10,27 @@ export default function SummaryForm() {
   const [error, setError] = useState<string | null>(null);
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
+  const [videoId, setVideoId] = useState<string | null>(null);
+  const [flashcards, setFlashcards] = useState([]);
 
   const extractVideoId = (url: string) => {
     const match = url.match(
       /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/))([\w-]{11})/
     );
-    console.log("Extracted video ID:", match);
+    // console.log("Extracted video ID:", match);
 
     return match ? match[1] : null;
   };
 
   const handleSummarize = async () => {
-    setError(null); // Reset error state
-    const videoId = extractVideoId(ytLink);
+    // reset
+    setError(null);
+    setSummary("");
+    setAuthor("");
+    setTitle("");
+    setFlashcards([]);
+
+    setVideoId(extractVideoId(ytLink));
     if (!videoId) {
       setError("Invalid YouTube link");
       // alert("Invalid YouTube link");
@@ -45,6 +53,7 @@ export default function SummaryForm() {
         transcript,
       });
       const summary = summaryRes.data.summary;
+
       setSummary(summary);
     } catch (error) {
       setError("An error occurred while summarizing the video.");
@@ -52,6 +61,28 @@ export default function SummaryForm() {
       console.error("Error summarizing:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleFlashCards = async () => {
+    setFlashcards([]);
+    if (!summary) return;
+    try {
+      const response = await axios.post("/api/flashcards", {
+        summary,
+      });
+      const flashcards = response.data.flashcards;
+      console.log("Flashcards:", flashcards);
+
+      setFlashcards(flashcards);
+      if (response.status === 200) {
+        alert("Flashcards created successfully!");
+      } else {
+        alert("Failed to create flashcards.");
+      }
+    } catch (error) {
+      console.error("Error creating flashcards:", error);
+      alert("An error occurred while creating the flashcards.");
     }
   };
 
@@ -86,6 +117,15 @@ export default function SummaryForm() {
         >
           {isLoading ? "Processing..." : "Summarize"}
         </button>
+        <button
+          className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out ${
+            isLoading || !summary ? "opacity-70 cursor-not-allowed" : ""
+          }`}
+          onClick={handleFlashCards}
+          disabled={!summary}
+        >
+          Create Flashcards
+        </button>{" "}
       </div>
 
       {summary && (
@@ -103,6 +143,17 @@ export default function SummaryForm() {
               .map((point, idx) => (
                 <li key={idx}>{point.trim()}</li>
               ))}
+          </ul>
+        </div>
+      )}
+
+      {flashcards && (
+        <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
+          <h3 className="text-xl font-medium text-blue-200 mb-4">FLASHCARDS</h3>
+          <ul className="list-decimal list-inside space-y-2 text-blue-100 leading-relaxed">
+            {flashcards.map((point: string, idx: Key | null | undefined) => (
+              <li key={idx}>{point.trim()}</li>
+            ))}
           </ul>
         </div>
       )}
