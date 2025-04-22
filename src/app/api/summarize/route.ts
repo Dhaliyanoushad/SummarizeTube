@@ -1,28 +1,13 @@
 import { NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
-import { YouTubeTranscriptApi } from "youtube-transcript-ts";
 
 export async function POST(req: Request) {
-  const videoId = await req.json().then((data) => data.videoId);
-  if (!videoId) {
-    return NextResponse.json({ error: "Missing videoId" }, { status: 400 });
+  const transcript = await req.json().then((data) => data.transcript);
+  if (!transcript) {
+    return NextResponse.json({ error: "Missing transcript" }, { status: 400 });
   }
 
   try {
-    const api = new YouTubeTranscriptApi();
-    const data = await api.fetchTranscript(videoId);
-    const transcriptArray = data.transcript.snippets;
-    const transcript = transcriptArray
-      ?.map((line: { text: string }) => line.text)
-      .join(" ");
-
-    if (!transcript) {
-      return NextResponse.json(
-        { error: "Missing transcript" },
-        { status: 400 }
-      );
-    }
-
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -49,7 +34,7 @@ export async function POST(req: Request) {
 
     // console.log("Response from OpenRouter:", summary);
 
-    return NextResponse.json({ summary, metadata: data.metadata });
+    return NextResponse.json({ summary });
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error("Axios error:", error.response?.data || error.message);
