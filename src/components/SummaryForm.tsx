@@ -30,7 +30,9 @@ export default function SummaryForm() {
     setTitle("");
     setFlashcards([]);
 
-    setVideoId(extractVideoId(ytLink));
+    const videoId = extractVideoId(ytLink);
+
+    setVideoId(videoId);
     if (!videoId) {
       setError("Invalid YouTube link");
       // alert("Invalid YouTube link");
@@ -86,6 +88,27 @@ export default function SummaryForm() {
     }
   };
 
+  const handleSave = async () => {
+    if (!summary) return;
+    try {
+      const response = await axios.post("/api/summaries", {
+        videoId,
+        title,
+        author,
+        summary,
+        flashcards,
+      });
+      if (response.status === 200) {
+        alert("Summary saved successfully!");
+      } else {
+        alert("Failed to save summary.");
+      }
+    } catch (error) {
+      console.error("Error saving summary:", error);
+      alert("An error occurred while saving the summary.");
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto backdrop-blur-lg bg-blue-950/30 rounded-3xl p-8 border border-blue-800/40 shadow-2xl">
       <input
@@ -101,7 +124,6 @@ export default function SummaryForm() {
           }
         }}
       />
-
       {error && (
         <p className="text-red-500 text-sm mt-2 flex justify-center ">
           {error}
@@ -127,7 +149,6 @@ export default function SummaryForm() {
           Create Flashcards
         </button>{" "}
       </div>
-
       {summary && (
         <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
           <h3 className="text-xl font-medium text-blue-200 mb-4">
@@ -146,8 +167,7 @@ export default function SummaryForm() {
           </ul>
         </div>
       )}
-
-      {flashcards && (
+      {flashcards.length > 0 && (
         <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
           <h3 className="text-xl font-medium text-blue-200 mb-4">FLASHCARDS</h3>
           <ul className="list-decimal list-inside space-y-2 text-blue-100 leading-relaxed">
@@ -156,6 +176,14 @@ export default function SummaryForm() {
             ))}
           </ul>
         </div>
+      )}
+      {summary && (
+        <button
+          className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out $`}
+          onClick={handleSave}
+        >
+          Save Summary
+        </button>
       )}
     </div>
   );
