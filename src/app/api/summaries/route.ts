@@ -65,7 +65,7 @@ export async function GET() {
     if (!summaries || summaries.length === 0) {
       return NextResponse.json(
         { message: "No summaries found" },
-        { status: 404 }
+        { status: 200 }
       );
     }
 

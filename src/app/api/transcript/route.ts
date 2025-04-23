@@ -24,13 +24,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ transcript, metadata: data.metadata });
   } catch (error) {
-    console.error(
-      "Error in summarizing:",
-      error instanceof Error ? error.message : "Unknown error"
-    );
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Error in summarizing:", errorMessage);
+    return NextResponse.json({ errorMessage: errorMessage }, { status: 500 });
   }
 }
