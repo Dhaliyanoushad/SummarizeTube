@@ -118,39 +118,38 @@ const Hero = () => {
             </button>
           </div>
           <p className="mt-3 text-sm text-[#030303]/60">
-            Try it now! No account required for the first 3 summaries.
+            Try it now! No account required!
           </p>
         </div>
+
+        {/* Embed YouTube video */}
+        {videoId && (
+          <div className="mt-10 w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-xl">
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        )}
+
+        {/* Display Summary */}
         {summary && (
           <div className="mt-10 w-full max-w-2xl bg-[#D4C9BE]/30 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-[#030303] mb-4">
-              Summary of <span className="text-[#030303]">{title}</span> by{" "}
-              <span className="text-[#242323]">{author}</span>
+              Summary of <span className="text-[#2865a8]">{title}</span> by{" "}
+              <span className="text-[#2865a8]">{author}</span>
             </h2>
             <p className="text-[#030303]/80">{summary}</p>
           </div>
         )}
-        {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
 
-        <div className="mt-20 relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-xl">
-          <div className="absolute inset-0 bg-[#D4C9BE]/30 backdrop-blur-sm flex items-center justify-center">
-            <div className="bg-[#123458] rounded-full p-4 cursor-pointer hover:bg-[#123458]/80 transition-colors">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-[#F1EFEC]"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="w-full h-full bg-[#D4C9BE]/30"></div>
-        </div>
+        {/* Display Error */}
+        {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
       </div>
     </section>
   );
