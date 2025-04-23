@@ -2,8 +2,22 @@
 
 import { Key, useState } from "react";
 import axios from "axios";
+import { useSidebarAction } from "../../context/SidebarActionContext";
+import { useUser } from "@clerk/nextjs";
 
 export default function SummaryForm() {
+  const UserGreeting = () => {
+    const { user, isLoaded } = useUser();
+    // console.log("user", user);
+
+    if (!isLoaded) return <div>Loading...</div>;
+    const userName =
+      user?.username || user?.firstName || user?.lastName || "User";
+
+    return userName;
+  };
+  const { refreshSidebar } = useSidebarAction();
+
   const [ytLink, setYtLink] = useState("");
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -100,6 +114,7 @@ export default function SummaryForm() {
       });
       if (response.status === 200) {
         alert("Summary saved successfully!");
+        refreshSidebar(); // 👈 trigger sidebar refresh
       } else {
         alert("Failed to save summary.");
       }
@@ -110,81 +125,101 @@ export default function SummaryForm() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto backdrop-blur-lg bg-blue-950/30 rounded-3xl p-8 border border-blue-800/40 shadow-2xl">
-      <input
-        type="text"
-        className="w-full bg-blue-900/30 border-0 rounded-2xl p-6 text-blue-50 placeholder-blue-400/70 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-inner backdrop-blur-sm"
-        placeholder="Paste a YouTube video link..."
-        value={ytLink}
-        onChange={(e) => setYtLink(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            handleSummarize();
-          }
-        }}
-      />
-      {error && (
-        <p className="text-red-500 text-sm mt-2 flex justify-center ">
-          {error}
-        </p>
-      )}
-      <div className="mt-6 flex justify-center">
-        <button
-          className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out ${
-            isLoading ? "opacity-70 cursor-not-allowed" : ""
-          }`}
-          onClick={handleSummarize}
-          disabled={isLoading || !ytLink.trim()}
-        >
-          {isLoading ? "Processing..." : "Summarize"}
-        </button>
-        <button
-          className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out ${
-            isLoading || !summary ? "opacity-70 cursor-not-allowed" : ""
-          }`}
-          onClick={handleFlashCards}
-          disabled={!summary}
-        >
-          Create Flashcards
-        </button>{" "}
-      </div>
-      {summary && (
-        <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
-          <h3 className="text-xl font-medium text-blue-200 mb-4">
-            Summary of <span className="text-blue-400">{title}</span> by{" "}
-            {author}
-          </h3>
-          <ul className="list-decimal list-inside space-y-2 text-blue-100 leading-relaxed">
-            {summary
-              .trim()
-              .replace(/^\d+\.\s*/, "")
-              .split(/\d+\.\s+/)
-              .filter(Boolean)
-              .map((point, idx) => (
+    <div className="w-full max-w-6xl mx-auto px-6 py-20">
+      <span className="text-xl text-blue-200 text-center mb-16 max-w-2xl mx-auto font-light leading-relaxed">
+        Welcome {UserGreeting()}
+      </span>
+      <h1 className="text-5xl font-semibold mb-6 text-white text-center tracking-tight">
+        YouTube AI <span className="text-blue-400">Summary</span>
+      </h1>
+      <p className="text-xl text-blue-200 text-center mb-16 max-w-2xl mx-auto font-light leading-relaxed">
+        Transform lengthy video transcripts into concise summaries with the
+        power of AI.
+      </p>
+
+      <div className="max-w-3xl mx-auto backdrop-blur-lg bg-blue-950/30 rounded-3xl p-8 border border-blue-800/40 shadow-2xl">
+        <input
+          type="text"
+          className="w-full bg-blue-900/30 border-0 rounded-2xl p-6 text-blue-50 placeholder-blue-400/70 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-inner backdrop-blur-sm"
+          placeholder="Paste a YouTube video link..."
+          value={ytLink}
+          onChange={(e) => setYtLink(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSummarize();
+            }
+          }}
+        />
+        {error && (
+          <p className="text-red-500 text-sm mt-2 flex justify-center ">
+            {error}
+          </p>
+        )}
+        <div className="mt-6 flex justify-center">
+          <button
+            className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out ${
+              isLoading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            onClick={handleSummarize}
+            disabled={isLoading || !ytLink.trim()}
+          >
+            {isLoading ? "Processing..." : "Summarize"}
+          </button>
+          <button
+            className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out ${
+              isLoading || !summary ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            onClick={handleFlashCards}
+            disabled={!summary}
+          >
+            Create Flashcards
+          </button>{" "}
+        </div>
+        {summary && (
+          <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
+            <h3 className="text-xl font-medium text-blue-200 mb-4">
+              Summary of <span className="text-blue-400">{title}</span> by{" "}
+              {author}
+            </h3>
+            <ul className="list-decimal list-inside space-y-2 text-blue-100 leading-relaxed">
+              {summary
+                .trim()
+                .replace(/^\d+\.\s*/, "")
+                .split(/\d+\.\s+/)
+                .filter(Boolean)
+                .map((point, idx) => (
+                  <li key={idx}>{point.trim()}</li>
+                ))}
+            </ul>
+          </div>
+        )}
+        {flashcards.length > 0 && (
+          <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
+            <h3 className="text-xl font-medium text-blue-200 mb-4">
+              FLASHCARDS
+            </h3>
+            <ul className="list-decimal list-inside space-y-2 text-blue-100 leading-relaxed">
+              {flashcards.map((point: string, idx: Key | null | undefined) => (
                 <li key={idx}>{point.trim()}</li>
               ))}
-          </ul>
-        </div>
-      )}
-      {flashcards.length > 0 && (
-        <div className="mt-10 p-6 bg-blue-900/20 backdrop-blur-md rounded-2xl border border-blue-700/30">
-          <h3 className="text-xl font-medium text-blue-200 mb-4">FLASHCARDS</h3>
-          <ul className="list-decimal list-inside space-y-2 text-blue-100 leading-relaxed">
-            {flashcards.map((point: string, idx: Key | null | undefined) => (
-              <li key={idx}>{point.trim()}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {summary && (
-        <button
-          className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out $`}
-          onClick={handleSave}
-        >
-          Save Summary
-        </button>
-      )}
+            </ul>
+          </div>
+        )}
+        {summary && (
+          <button
+            className={`px-10 py-3 bg-blue-500 text-white font-medium rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 ease-in-out $`}
+            onClick={handleSave}
+          >
+            Save Summary
+          </button>
+        )}
+      </div>
+      <div className="mt-20 text-center">
+        <p className="text-sm text-blue-300 opacity-70">
+          Designed to help you study smarter, not harder.
+        </p>
+      </div>
     </div>
   );
 }
