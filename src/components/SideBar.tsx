@@ -26,7 +26,6 @@ const Sidebar = () => {
         setError(response.data.message);
         return;
       }
-      // console.log("dools", response.data);
       setSummaries(response.data);
       setError(null);
     } catch (err) {
@@ -39,7 +38,6 @@ const Sidebar = () => {
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`/api/summaries/${id}`); // Your API endpoint to delete summaries
-      // alert("Summary deleted successfully!");
       fetchSummaries();
       setSummaries((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
@@ -54,31 +52,57 @@ const Sidebar = () => {
 
   if (isLoading) {
     return (
-      <div className="sidebar bg-blue-900 p-6 w-64 h-screen text-white">
+      <div
+        className="sidebar p-6 w-64 h-screen"
+        style={{ backgroundColor: "#123458", color: "#F1EFEC" }}
+      >
         <p>Loading summaries...</p>
       </div>
     );
   }
 
   return (
-    <div className="sidebar bg-blue-900 p-6 w-64 h-screen text-white">
-      <h2 className="text-xl font-bold text-blue-200">Saved Summaries</h2>
+    <div
+      className="sidebar p-6 w-64 h-screen"
+      style={{ backgroundColor: "#123458", color: "#F1EFEC" }}
+    >
+      <h2 className="text-xl font-bold mb-6" style={{ color: "#F1EFEC" }}>
+        Saved Summaries
+      </h2>
       {summaries.length > 0 && (
         <ul className="mt-4 space-y-2">
           {summaries.map((item) => (
-            <li key={item._id}>
+            <li
+              key={item._id}
+              className="flex items-center justify-between rounded p-2 mb-2"
+              style={{ backgroundColor: "rgba(212, 201, 190, 0.1)" }}
+            >
               <Link
                 href={`/dashboard/summary/${item._id}`}
-                className="block p-2 rounded hover:bg-blue-700"
+                className="block flex-grow hover:text-opacity-80 transition-all"
+                style={{ color: "#F1EFEC" }}
               >
                 {item.title}
               </Link>
-              <button onClick={() => handleDelete(item._id)}>🗑️</button>
+              <button
+                onClick={() => handleDelete(item._id)}
+                className="ml-2 p-1 rounded transition-colors cursor-pointer hover:scale-110"
+                style={{
+                  backgroundColor: "rgba(212, 201, 190, 0.2)",
+                  color: "#F1EFEC",
+                }}
+              >
+                🗑️
+              </button>
             </li>
           ))}
         </ul>
       )}
-      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {error && (
+        <p className="mt-4" style={{ color: "#D4C9BE" }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 };
