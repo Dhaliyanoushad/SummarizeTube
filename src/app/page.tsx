@@ -1,13 +1,13 @@
 "use client";
 import Head from "next/head";
 // import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import How from "@/components/How";
 import Cta from "@/components/Cta";
 import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 export default function Home() {
   return (
@@ -21,8 +21,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar />
-
+      <Header />
       <main>
         <Hero />
         <Features />
