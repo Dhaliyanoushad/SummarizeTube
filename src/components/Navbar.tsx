@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  UserButton,
-  SignOutButton,
-  useUser,
-} from "@clerk/nextjs";
+import { UserButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
 
