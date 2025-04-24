@@ -11,7 +11,7 @@ export default function DashboardLayout({
   return (
     <SidebarActionProvider>
       <Navbar />
-      <main className="min-h-screen bg-[#F1EFEC] pt-16 flex">
+      <main className="min-h-screen bg-[#D4C9BE] pt-16 flex">
         <Sidebar />
         {children}
       </main>

@@ -50,21 +50,21 @@ const Sidebar = () => {
 
   if (isLoading) {
     return (
-      <div className="sidebar p-6 w-64 h-full bg-[#123458] text-[#F1EFEC]">
+      <div className="sidebar p-6 w-64 h-full bg-[#102844] text-[#f5f3ef]">
         <p>Loading summaries...</p>
       </div>
     );
   }
 
   return (
-    <div className="sidebar p-6 w-64 min-h-full bg-[#123458] text-[#F1EFEC]">
+    <div className="sidebar p-6 w-64 min-h-full bg-[#102844] text-[#f5f3ef]">
       <h2 className="text-xl font-bold mb-6">Saved Summaries</h2>
       {summaries.length > 0 && (
         <ul className="mt-4 space-y-2">
           {summaries.map((item) => (
             <li
               key={item._id}
-              className="flex items-center justify-between rounded p-2 mb-2 bg-[#D4C9BE]/10"
+              className="flex items-center justify-between rounded p-2 mb-2 bg-[#f5f3ef]/10 hover:bg-[#f5f3ef]/20 transition-all"
             >
               <Link
                 href={`/dashboard/summary/${item._id}`}
@@ -74,7 +74,7 @@ const Sidebar = () => {
               </Link>
               <button
                 onClick={() => handleDelete(item._id)}
-                className="ml-2 p-1 rounded transition-transform hover:scale-110 bg-[#D4C9BE]/20"
+                className="ml-2 p-1 rounded transition-transform hover:scale-110 hover:bg-[#e74c3c]/30"
               >
                 🗑️
               </button>
@@ -82,7 +82,7 @@ const Sidebar = () => {
           ))}
         </ul>
       )}
-      {error && <p className="mt-4 text-[#D4C9BE]">{error}</p>}
+      {error && <p className="mt-4 text-[#e74c3c]">{error}</p>}
     </div>
   );
 };
