@@ -1,5 +1,6 @@
 import Sidebar from "@/components/SideBar";
 import { SidebarActionProvider } from "../../../context/SidebarActionContext";
+import Navbar from "@/components/Navbar";
 
 // src/app/dashboard/layout.tsx
 export default function DashboardLayout({
@@ -9,7 +10,8 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarActionProvider>
-      <main className="min-h-screen bg-gradient-to-b from-blue-950 to-black p-0 flex">
+      <Navbar />
+      <main className="min-h-screen bg-[#F1EFEC] pt-16 flex">
         <Sidebar />
         {children}
       </main>
