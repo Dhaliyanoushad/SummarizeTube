@@ -126,7 +126,11 @@ export default function SummaryForm() {
                 }
               }}
             />
-
+            {error && (
+              <p className="text-sm mt-2 flex justify-center text-[#d00000]">
+                {error}
+              </p>
+            )}
             <button
               className={`px-6 py-3 bg-[#123458] text-[#F1EFEC] rounded-lg hover:bg-[#123458]/90 transition-colors w-full sm:w-auto ${
                 isLoading ? "opacity-70 cursor-not-allowed" : ""
