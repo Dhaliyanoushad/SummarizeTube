@@ -1,8 +1,10 @@
-import React from "react";
-import { useState } from "react";
-import axios, { AxiosError } from "axios";
+"use client";
 
-const Hero = () => {
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+
+export default function SummaryForm() {
   const [ytLink, setYtLink] = useState("");
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,17 +28,14 @@ const Hero = () => {
     setSummary("");
     setAuthor("");
     setTitle("");
+    // setFlashcards([]);
 
-    const videoIdExtracted = extractVideoId(ytLink);
+    const videoId = extractVideoId(ytLink);
 
-    setVideoId(videoIdExtracted);
-
-    console.log("Video ID:", videoIdExtracted);
-    if (!videoIdExtracted) {
+    setVideoId(videoId);
+    if (!videoId) {
       setError("Invalid YouTube link");
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
+      // alert("Invalid YouTube link");
       return;
     }
 
@@ -44,12 +43,9 @@ const Hero = () => {
     try {
       // fetching transcript
       const transcriptRes = await axios.post("/api/transcript", {
-        videoId: videoIdExtracted,
+        videoId,
       });
-      console.log("Transcript response:", transcriptRes.data);
       const transcript = transcriptRes.data.transcript;
-      console.log(transcript);
-
       setAuthor(transcriptRes.data.metadata.author);
       setTitle(transcriptRes.data.metadata.title);
       // console.log(author, title);
@@ -61,36 +57,60 @@ const Hero = () => {
       const summary = summaryRes.data.summary;
 
       setSummary(summary);
-    } catch (err) {
-      const error = err as AxiosError<{
-        errorMessage?: string;
-        error?: string;
-      }>;
+      toast.success("Video summarized successfully!", {
+        style: {
+          background: "#F1EFEC",
+          color: "#123458",
+          fontWeight: "bold",
+          border: "1px solid #D4C9BE",
+        },
+        iconTheme: {
+          primary: "#123458",
+          secondary: "#FFF",
+        },
+      });
+    } catch (error) {
+      let message = "An error occurred while summarizing the video.";
 
-      const backendMessage =
-        error.response?.data?.errorMessage || error.response?.data?.error;
-      console.log(error.response?.data?.errorMessage);
+      if (axios.isAxiosError(error)) {
+        const backendMsg = error.response?.data?.errorMessage;
+        if (backendMsg) {
+          message = backendMsg;
+        }
+      }
 
-      setError(
-        backendMessage || "An error occurred while summarizing the video."
-      );
+      setError(message);
+
+      toast.error(message, {
+        style: {
+          background: "#F1EFEC",
+          color: "#030303",
+          fontWeight: "bold",
+          border: "1px solid #D4C9BE",
+        },
+        iconTheme: {
+          primary: "#030303",
+          secondary: "#FFF",
+        },
+      });
 
       console.error("Error summarizing:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
-    <section className="pt-32 pb-20 px-4">
+    <section className="pt-32 pb-20 px-4 bg-[#F1EFEC]">
       <div className="container mx-auto flex flex-col items-center text-center">
+        {" "}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#030303] max-w-4xl">
           Transform YouTube Videos into Summaries and Flashcards
         </h1>
         <p className="mt-6 text-xl text-[#030303]/80 max-w-2xl">
-          Learn faster and retain more with AI-powered summaries and flashcards
-          from any YouTube video.
+          Turn any YouTube video into clear, concise summaries and flashcards -
+          powered by AI, designed for smarter learning.
         </p>
-
         <div className="mt-12 w-full max-w-2xl">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <input
@@ -121,7 +141,6 @@ const Hero = () => {
             Try it now! No account required!
           </p>
         </div>
-
         {/* Embed YouTube video */}
         {videoId && (
           <div className="mt-10 w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-xl">
@@ -130,13 +149,11 @@ const Hero = () => {
               height="100%"
               src={`https://www.youtube.com/embed/${videoId}`}
               title="YouTube video player"
-              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
           </div>
         )}
-
         {/* Display Summary */}
         {summary && (
           <div className="mt-10 w-full max-w-2xl bg-[#D4C9BE]/30 p-6 rounded-lg shadow-lg">
@@ -147,12 +164,7 @@ const Hero = () => {
             <p className="text-[#030303]/80">{summary}</p>
           </div>
         )}
-
-        {/* Display Error */}
-        {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
       </div>
     </section>
   );
-};
-
-export default Hero;
+}
