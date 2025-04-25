@@ -50,7 +50,7 @@ const Sidebar = () => {
 
   if (isLoading) {
     return (
-      <div className="sidebar p-6 w-64 h-full bg-[#102844] text-[#f5f3ef]">
+      <div className="sidebar p-6 w-64 min-h-full bg-[#102844] text-[#f5f3ef]">
         <p>Loading summaries...</p>
       </div>
     );
