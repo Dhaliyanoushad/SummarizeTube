@@ -126,11 +126,7 @@ export default function SummaryForm() {
                 }
               }}
             />
-            {error && (
-              <p className="text-sm mt-2 flex justify-center text-[#d00000]">
-                {error}
-              </p>
-            )}
+
             <button
               className={`px-6 py-3 bg-[#123458] text-[#F1EFEC] rounded-lg hover:bg-[#123458]/90 transition-colors w-full sm:w-auto ${
                 isLoading ? "opacity-70 cursor-not-allowed" : ""
@@ -141,6 +137,11 @@ export default function SummaryForm() {
               {isLoading ? "Processing..." : "Summarize"}
             </button>
           </div>
+          {error && (
+            <p className="text-sm mt-2 flex justify-center text-[#d00000]">
+              {error}
+            </p>
+          )}
           <p className="mt-3 text-sm text-[#030303]/60">
             Try it now! No account required!
           </p>
