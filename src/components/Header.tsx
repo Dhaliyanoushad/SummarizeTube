@@ -44,7 +44,7 @@ export default function Navbar() {
             <span className="text-xl font-bold">SummarizeTube</span>
           </div>
 
-          <nav className="hidden md:flex items-center justify-center space-x-8 flex-1">
+          <nav className="hidden md:flex items-center justify-center space-x-8 flex-1 text">
             <a href="#" className="hover:text-[#D4C9BE] transition-colors">
               Home
             </a>
