@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YouTube Summarizer
 
-## Getting Started
+A YouTube summarizer web application built with Next.js, MongoDB, ClerkAuth, and TypeScript. This app allows users to input a YouTube video URL, retrieve the transcript (if available), generate a summary using the OpenRouter API, and create flashcards based on the summary. Users can log in to save and access their summaries and flashcards at any time.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Input a YouTube video URL and fetch its transcript (if available).
+- Generate a concise summary using the OpenRouter API.
+- Create flashcards from the video summary for easy review.
+- Secure user authentication using ClerkAuth.
+- Save and view summaries and flashcards anytime with a user login.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js**: React framework for building the app.
+- **MongoDB**: Database for storing user data, summaries, and flashcards.
+- **ClerkAuth**: Authentication service for user login and management.
+- **OpenRouter API**: Used to generate summaries from video transcripts.
+- **TypeScript**: Typed JavaScript for better development experience.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Demo
 
-## Learn More
+The app is live! Check it out here: [YouTube Summarizer](#)
 
-To learn more about Next.js, take a look at the following resources:
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+    ```bash
+    git clone <repository_url>
+    cd <project_name>
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-## Deploy on Vercel
+3. Create a `.env.local` file in the root of the project and add the following environment variables:
+    ```
+    NEXT_PUBLIC_CLERK_FRONTEND_API=your_clerk_frontend_api
+    CLERK_API_KEY=your_clerk_api_key
+    MONGODB_URI=your_mongodb_connection_uri
+    OPENROUTER_API_KEY=your_openrouter_api_key
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Run the application locally:
+    ```bash
+    npm run dev
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Open your browser and go to `http://localhost:3000` to see the app in action.
+
+## Usage
+
+1. Log in using your ClerkAuth account.
+2. Enter a YouTube video URL in the input field.
+3. Click "Summarize" to fetch the transcript (if available) and generate a summary.
+4. Create flashcards based on the summary and save to review later.
+5. All summaries and flashcards are saved to your account for easy access.
