@@ -5,11 +5,12 @@ import Summary from "../../../../../models/summary";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth(); // current authenticated user
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+    const { userId } = await auth();
 
     if (!userId) {
       return NextResponse.json(
@@ -44,11 +45,12 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth(); // current authenticated user
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+    const { userId } = await auth();
 
     if (!userId) {
       return NextResponse.json(
@@ -73,7 +75,7 @@ export async function DELETE(
 
     return NextResponse.json(summary, { status: 200 });
   } catch (error) {
-    console.error("Error getting summaries:", error);
+    console.error("Error deleting summary:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
