@@ -26,8 +26,8 @@ The app is live! Check it out here: [YouTube Summarizer](#)
 
 1. Clone the repository:
     ```bash
-    git clone <repository_url>
-    cd <project_name>
+    git clone https://github.com/Dhaliyanoushad/SummarizeTube
+    cd SummarizeTube
     ```
 
 2. Install dependencies:
