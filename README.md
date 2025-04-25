@@ -52,7 +52,7 @@ The app is live! Check it out here: [YouTube Summarizer](#)
 
 ## Usage
 
-1. Log in using your ClerkAuth account.
+1. Log in/Sign up.
 2. Enter a YouTube video URL in the input field.
 3. Click "Summarize" to fetch the transcript (if available) and generate a summary.
 4. Create flashcards based on the summary and save to review later.
